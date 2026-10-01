@@ -1,0 +1,459 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#f7f7f5" />
+  <title>WORK TOOLS — Welcome</title>
+  <meta name="description" content="업무에 필요한 웹 도구를 한 곳에서 빠르게 실행하세요." />
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=Noto+Sans+KR:wght@400;500;600;700;800&display=swap');
+
+    :root{
+      --paper:#f7f7f5;
+      --ink:#111111;
+      --muted:#747474;
+      --line:#d9d9d5;
+      --red:#e52329;
+      --soft:#ecece8;
+      --white:#ffffff;
+    }
+
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;
+      min-height:100vh;
+      color:var(--ink);
+      background:
+        linear-gradient(rgba(17,17,17,.035) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(17,17,17,.035) 1px, transparent 1px),
+        var(--paper);
+      background-size:32px 32px;
+      font-family:"Noto Sans KR", sans-serif;
+      overflow-x:hidden;
+    }
+
+    a{color:inherit;text-decoration:none}
+    button,a{ -webkit-tap-highlight-color:transparent; }
+
+    .shell{
+      min-height:100vh;
+      max-width:1440px;
+      margin:0 auto;
+      padding:28px 34px 40px;
+      display:flex;
+      flex-direction:column;
+    }
+
+    header{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:20px;
+      min-height:52px;
+    }
+
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      font-weight:800;
+      letter-spacing:-.04em;
+    }
+
+    .brand-mark{
+      width:34px;height:34px;
+      border-radius:50%;
+      background:var(--red);
+      position:relative;
+      box-shadow:0 0 0 7px rgba(229,35,41,.08);
+    }
+    .brand-mark::after{
+      content:"";
+      position:absolute;
+      width:8px;height:8px;
+      border-radius:50%;
+      background:var(--paper);
+      top:13px;left:13px;
+    }
+
+    .top-label{
+      font-size:12px;
+      font-weight:700;
+      color:var(--muted);
+      letter-spacing:.14em;
+      text-transform:uppercase;
+      white-space:nowrap;
+    }
+
+    main{
+      flex:1;
+      display:grid;
+      grid-template-columns:minmax(0, .9fr) minmax(520px, 1.1fr);
+      gap:60px;
+      align-items:center;
+      padding:68px 0 44px;
+    }
+
+    .hero{
+      align-self:center;
+      max-width:620px;
+    }
+
+    .eyebrow{
+      display:inline-flex;
+      align-items:center;
+      gap:9px;
+      font-size:13px;
+      font-weight:700;
+      color:var(--red);
+      margin-bottom:22px;
+    }
+    .eyebrow::before{
+      content:"";
+      width:28px;height:2px;background:var(--red);
+    }
+
+    h1{
+      font-family:"Archivo Black","Noto Sans KR",sans-serif;
+      font-size:clamp(58px, 7.3vw, 106px);
+      line-height:.88;
+      letter-spacing:-.065em;
+      margin:0;
+      text-transform:uppercase;
+    }
+    h1 .line{display:block}
+    h1 .accent{
+      color:transparent;
+      -webkit-text-stroke:2px var(--ink);
+      position:relative;
+    }
+
+    .intro{
+      margin:30px 0 0;
+      max-width:470px;
+      font-size:18px;
+      line-height:1.72;
+      color:#454545;
+      word-break:keep-all;
+      text-wrap:pretty;
+    }
+
+    .utility-note{
+      margin-top:38px;
+      display:flex;
+      align-items:center;
+      gap:12px;
+      font-size:13px;
+      color:var(--muted);
+      font-weight:600;
+    }
+    .utility-note .pulse{
+      width:8px;height:8px;border-radius:50%;
+      background:var(--red);
+      box-shadow:0 0 0 6px rgba(229,35,41,.08);
+    }
+
+    .launcher{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:18px;
+      align-items:stretch;
+    }
+
+    .app-card{
+      position:relative;
+      min-height:430px;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.82);
+      backdrop-filter:blur(10px);
+      border-radius:28px;
+      padding:26px;
+      overflow:hidden;
+      display:flex;
+      flex-direction:column;
+      transition:transform .35s cubic-bezier(.2,.8,.2,1), box-shadow .35s ease, border-color .35s ease;
+      outline:none;
+    }
+
+    .app-card:hover,
+    .app-card:focus-visible{
+      transform:translateY(-8px);
+      box-shadow:0 24px 60px rgba(0,0,0,.12);
+      border-color:#b9b9b4;
+    }
+    .app-card:focus-visible{
+      box-shadow:0 0 0 4px rgba(229,35,41,.2), 0 24px 60px rgba(0,0,0,.12);
+    }
+
+    .card-top{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:14px;
+    }
+    .tag{
+      font-size:11px;
+      font-weight:800;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+      color:var(--muted);
+    }
+    .arrow{
+      width:40px;height:40px;
+      border-radius:50%;
+      border:1px solid var(--line);
+      display:grid;
+      place-items:center;
+      font-size:21px;
+      transition:transform .3s ease, background .3s ease, color .3s ease;
+      background:var(--white);
+    }
+    .app-card:hover .arrow{
+      transform:translate(3px,-3px);
+      background:var(--ink);
+      color:var(--white);
+    }
+
+    .visual{
+      flex:1;
+      min-height:220px;
+      display:grid;
+      place-items:center;
+      position:relative;
+      margin:10px 0 6px;
+    }
+
+    .genogram-icon{
+      width:182px;height:182px;
+      position:relative;
+      transition:transform .35s cubic-bezier(.2,.8,.2,1);
+    }
+    .app-card:hover .genogram-icon{transform:scale(1.04) rotate(-2deg)}
+    .person{
+      position:absolute;
+      width:54px;height:54px;
+      border:5px solid var(--ink);
+      background:var(--white);
+    }
+    .person.circle{border-radius:50%}
+    .p1{top:8px;left:14px}
+    .p2{top:8px;right:14px;border-radius:50%}
+    .p3{bottom:6px;left:64px;border-radius:50%;border-color:var(--red)}
+    .line-h,.line-v{
+      position:absolute;background:var(--ink);
+      transform-origin:left center;
+    }
+    .line-h{height:5px;width:62px;top:34px;left:60px}
+    .line-v{width:5px;height:58px;top:38px;left:89px}
+    .line-child{height:5px;width:40px;top:95px;left:89px;transform:rotate(90deg)}
+    .line-child::after{
+      content:"";position:absolute;width:5px;height:38px;background:var(--ink);right:-2px;top:-16px;transform:rotate(90deg);
+    }
+
+    .seal-icon{
+      width:180px;height:180px;
+      border:10px solid var(--red);
+      border-radius:50%;
+      display:grid;
+      place-items:center;
+      font-family:"Noto Sans KR",sans-serif;
+      font-size:41px;
+      font-weight:800;
+      color:var(--red);
+      letter-spacing:-.18em;
+      transform:rotate(-8deg);
+      position:relative;
+      box-shadow:inset 0 0 0 4px rgba(229,35,41,.13);
+      transition:transform .35s cubic-bezier(.2,.8,.2,1);
+    }
+    .seal-icon::before{
+      content:"SIGN";
+      position:absolute;
+      top:24px;
+      font-family:"Archivo Black",sans-serif;
+      font-size:12px;
+      letter-spacing:.18em;
+    }
+    .seal-icon::after{
+      content:"";
+      position:absolute;
+      width:92px;height:3px;
+      background:var(--red);
+      bottom:29px;
+      border-radius:4px;
+    }
+    .app-card:hover .seal-icon{transform:rotate(-2deg) scale(1.05)}
+
+    .card-title{
+      font-size:28px;
+      font-weight:800;
+      letter-spacing:-.045em;
+      margin:0 0 8px;
+      word-break:keep-all;
+    }
+    .card-copy{
+      margin:0;
+      color:var(--muted);
+      line-height:1.6;
+      font-size:14px;
+      word-break:keep-all;
+      text-wrap:pretty;
+    }
+
+    footer{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:20px;
+      border-top:1px solid var(--line);
+      padding-top:18px;
+      font-size:12px;
+      color:var(--muted);
+    }
+
+    .red-rule{
+      position:fixed;
+      left:0;top:0;
+      width:100%;height:5px;
+      background:var(--red);
+      transform-origin:left;
+      animation:enterRule .8s ease both;
+    }
+
+    .hero,.app-card{
+      animation:rise .8s cubic-bezier(.2,.8,.2,1) both;
+    }
+    .app-card:nth-child(1){animation-delay:.08s}
+    .app-card:nth-child(2){animation-delay:.16s}
+
+    @keyframes rise{
+      from{opacity:0;transform:translateY(24px)}
+      to{opacity:1;transform:translateY(0)}
+    }
+    @keyframes enterRule{
+      from{transform:scaleX(0)}
+      to{transform:scaleX(1)}
+    }
+
+    @media (max-width:1100px){
+      .shell{padding:24px}
+      main{grid-template-columns:1fr;gap:48px;padding-top:56px}
+      .hero{max-width:760px}
+      h1{font-size:clamp(64px, 11vw, 108px)}
+      .launcher{max-width:900px}
+    }
+
+    @media (max-width:680px){
+      .shell{padding:20px 16px 28px}
+      .top-label{display:none}
+      main{padding-top:38px;gap:36px}
+      h1{font-size:clamp(54px, 18vw, 78px);line-height:.91}
+      h1 .accent{-webkit-text-stroke:1.4px var(--ink)}
+      .intro{font-size:16px;margin-top:24px}
+      .utility-note{margin-top:24px}
+      .launcher{grid-template-columns:1fr}
+      .app-card{min-height:340px;padding:22px;border-radius:22px}
+      .visual{min-height:180px}
+      .genogram-icon{transform:scale(.88)}
+      .app-card:hover .genogram-icon{transform:scale(.92) rotate(-2deg)}
+      .seal-icon{transform:rotate(-8deg) scale(.86)}
+      .app-card:hover .seal-icon{transform:rotate(-2deg) scale(.91)}
+      .card-title{font-size:24px}
+      footer{align-items:flex-start;flex-direction:column;gap:6px}
+    }
+
+    @media (prefers-reduced-motion:reduce){
+      *,*::before,*::after{
+        animation-duration:.01ms!important;
+        animation-iteration-count:1!important;
+        transition-duration:.01ms!important;
+        scroll-behavior:auto!important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="red-rule" aria-hidden="true"></div>
+
+  <div class="shell">
+    <header>
+      <a class="brand" href="./" aria-label="홈">
+        <span class="brand-mark" aria-hidden="true"></span>
+        <span>WORK TOOLS</span>
+      </a>
+      <div class="top-label">Personal utility launcher</div>
+    </header>
+
+    <main>
+      <section class="hero" aria-labelledby="welcome-title">
+        <div class="eyebrow">WELCOME</div>
+        <h1 id="welcome-title">
+          <span class="line">MAKE.</span>
+          <span class="line accent">WORK.</span>
+          <span class="line">EASIER.</span>
+        </h1>
+        <p class="intro">
+          자주 쓰는 업무 도구를 한 곳에서 바로 실행하세요.
+          필요한 기능은 각각 독립적으로 유지하고, 이 페이지는 가장 빠른 시작점만 제공합니다.
+        </p>
+        <div class="utility-note">
+          <span class="pulse" aria-hidden="true"></span>
+          <span>도구를 선택하면 새 탭에서 열립니다.</span>
+        </div>
+      </section>
+
+      <section class="launcher" aria-label="웹앱 바로가기">
+        <a
+          class="app-card"
+          href="https://kimhoho8601-alt.github.io/family-tree/"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="가계도와 생태도 도구 열기"
+        >
+          <div class="card-top">
+            <span class="tag">Family mapping</span>
+            <span class="arrow" aria-hidden="true">↗</span>
+          </div>
+          <div class="visual" aria-hidden="true">
+            <div class="genogram-icon">
+              <span class="person p1"></span>
+              <span class="person circle p2"></span>
+              <span class="person circle p3"></span>
+              <span class="line-h"></span>
+              <span class="line-v"></span>
+              <span class="line-child"></span>
+            </div>
+          </div>
+          <h2 class="card-title">가계도 · 생태도</h2>
+          <p class="card-copy">가족 구조와 관계, 자원 연결을 시각적으로 구성하고 이미지로 저장합니다.</p>
+        </a>
+
+        <a
+          class="app-card"
+          href="https://kimhoho8601-alt.github.io/sign/"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="서명과 도장 만들기 도구 열기"
+        >
+          <div class="card-top">
+            <span class="tag">Signature maker</span>
+            <span class="arrow" aria-hidden="true">↗</span>
+          </div>
+          <div class="visual" aria-hidden="true">
+            <div class="seal-icon">서명</div>
+          </div>
+          <h2 class="card-title">서명 · 도장 만들기</h2>
+          <p class="card-copy">사인과 인장을 간편하게 만들고 필요한 이미지 형태로 활용합니다.</p>
+        </a>
+      </section>
+    </main>
+
+    <footer>
+      <span>TOOLS HUB / MAIN</span>
+      <span>각 서비스는 독립된 프로젝트로 연결됩니다.</span>
+    </footer>
+  </div>
+</body>
+</html>
