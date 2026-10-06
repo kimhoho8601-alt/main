@@ -1,6 +1,7 @@
 (() => {
   const api = 'https://tedbkobhltarqibjhfhk.supabase.co/functions/v1/main-visitor-api';
   const key = 'work-tools-main-visitor-v1';
+  let adminCode = '';
 
   function id() {
     let v = '';
@@ -23,42 +24,158 @@
     return data;
   }
 
-  function dialog() {
-    let d = document.getElementById('visitorStatsDialog');
+  function makeDialog(id, inner) {
+    let d = document.getElementById(id);
     if (d) return d;
     d = document.createElement('dialog');
-    d.id = 'visitorStatsDialog';
-    d.style.cssText = 'border:0;border-radius:20px;padding:0;width:min(680px,calc(100vw - 28px));box-shadow:0 30px 90px rgba(0,0,0,.28)';
-    d.innerHTML = '<div style="padding:28px;font-family:Noto Sans KR,sans-serif"><div style="display:flex;justify-content:space-between;align-items:start;gap:20px"><div><div style="color:#e52329;font-size:11px;font-weight:800;letter-spacing:.14em">VISITOR STATS</div><h2 style="margin:5px 0 0;font-size:26px">WORK TOOLS 접속 현황</h2></div><button id="visitorStatsClose" style="border:0;background:#f1efef;border-radius:10px;width:36px;height:36px;font-size:24px;cursor:pointer">×</button></div><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:22px"><div class="vstat"><span>오늘 방문자</span><strong id="vToday">0</strong></div><div class="vstat"><span>누적 방문자</span><strong id="vTotal">0</strong></div><div class="vstat"><span>누적 방문 횟수</span><strong id="vVisits">0</strong></div></div><p style="margin:16px 0 0;padding:13px 14px;background:#f5f3f3;border-radius:12px;color:#756d6e;font-size:11px;line-height:1.6">브라우저에 생성된 익명 ID로 집계합니다. 같은 브라우저의 하루 방문은 1회로 계산됩니다.</p></div>';
-    const style = document.createElement('style');
-    style.textContent = '#visitorStatsDialog::backdrop{background:rgba(24,15,18,.52);backdrop-filter:blur(2px)}#visitorStatsDialog .vstat{padding:20px;border:1px solid #d9d9d5;border-radius:16px;background:#fff}#visitorStatsDialog .vstat span{display:block;color:#747474;font-size:11px;font-weight:700;margin-bottom:9px}#visitorStatsDialog .vstat strong{display:block;color:#e52329;font-size:34px;font-weight:800}@media(max-width:560px){#visitorStatsDialog>div>div:nth-child(2){grid-template-columns:1fr!important}}';
-    document.head.appendChild(style);
+    d.id = id;
+    d.className = 'wt-dialog';
+    d.innerHTML = inner;
     document.body.appendChild(d);
-    d.querySelector('#visitorStatsClose').onclick = () => d.close();
+    d.addEventListener('click', e => { if (e.target === d) d.close(); });
+    const close = d.querySelector('[data-close]');
+    if (close) close.addEventListener('click', () => d.close());
     return d;
   }
 
-  async function openStats() {
+  function feedbackDialog() {
+    const d = makeDialog('feedbackDialog',
+      '<div class="wt-dialog-inner"><div class="wt-dialog-head"><div><div class="wt-kicker">FEEDBACK</div><h2>관리자에게 의견 보내기</h2></div><button class="wt-close" data-close aria-label="닫기">×</button></div><label class="wt-field"><span>의견</span><textarea id="feedbackMessage" class="wt-textarea" maxlength="1500" placeholder="불편한 점, 추가되면 좋은 기능 등을 자유롭게 적어주세요."></textarea></label><div id="feedbackStatus" class="wt-status"></div><div class="wt-actions"><button class="wt-btn ghost" data-close type="button">취소</button><button class="wt-btn primary" id="feedbackSubmit" type="button">의견 보내기</button></div></div>'
+    );
+    d.querySelector('#feedbackSubmit').onclick = async () => {
+      const msg = d.querySelector('#feedbackMessage').value.trim();
+      const st = d.querySelector('#feedbackStatus');
+      if (!msg) { st.textContent = '의견 내용을 입력해주세요.'; return; }
+      st.textContent = '전송 중...';
+      try {
+        await call({ action: 'submitFeedback', message: msg });
+        d.querySelector('#feedbackMessage').value = '';
+        st.textContent = '의견을 보냈습니다.';
+        setTimeout(() => d.close(), 700);
+      } catch (e) {
+        st.textContent = e.message || '의견 전송에 실패했습니다.';
+      }
+    };
+    return d;
+  }
+
+  function noticeDialog(notice) {
+    const d = makeDialog('noticeDialog',
+      '<div class="wt-dialog-inner"><div class="wt-dialog-head"><div><div class="wt-kicker">NOTICE</div><h2 class="wt-notice-title" id="noticeTitle"></h2></div><button class="wt-close" data-close aria-label="닫기">×</button></div><div class="wt-notice-body" id="noticeBody"></div></div>'
+    );
+    d.querySelector('#noticeTitle').textContent = notice?.title || '공지';
+    d.querySelector('#noticeBody').textContent = notice?.body || '';
+    return d;
+  }
+
+  function adminDialog() {
+    const d = makeDialog('adminDialog',
+      '<div class="wt-dialog-inner"><div class="wt-dialog-head"><div><div class="wt-kicker">ADMIN</div><h2>WORK TOOLS 관리</h2></div><button class="wt-close" data-close aria-label="닫기">×</button></div><div class="wt-stats"><div class="wt-stat"><span>오늘 방문자</span><strong id="aToday">0</strong></div><div class="wt-stat"><span>누적 방문자</span><strong id="aTotal">0</strong></div><div class="wt-stat"><span>누적 방문 횟수</span><strong id="aVisits">0</strong></div></div><div class="wt-admin-grid"><section class="wt-admin-panel"><h3>팝업 공지</h3><p>메인 페이지 접속 시 표시할 공지를 설정합니다.</p><label class="wt-field"><span>제목</span><input class="wt-input" id="aNoticeTitle" maxlength="80"></label><label class="wt-field"><span>내용</span><textarea class="wt-textarea" id="aNoticeBody" maxlength="2000"></textarea></label><label class="wt-check"><input type="checkbox" id="aNoticeActive"> 공지 활성화</label><div id="aNoticeStatus" class="wt-status"></div><div class="wt-actions"><button class="wt-btn primary" id="aNoticeSave" type="button">공지 저장</button></div></section><section class="wt-admin-panel"><h3>받은 의견</h3><p>최근 의견 100건까지 표시됩니다.</p><div class="wt-feedback-list" id="aFeedbackList"></div></section></div></div>'
+    );
+    d.querySelector('#aNoticeSave').onclick = async () => {
+      const st = d.querySelector('#aNoticeStatus');
+      st.textContent = '저장 중...';
+      try {
+        const data = await call({
+          action: 'saveNotice',
+          adminCode,
+          title: d.querySelector('#aNoticeTitle').value,
+          body: d.querySelector('#aNoticeBody').value,
+          isActive: d.querySelector('#aNoticeActive').checked
+        });
+        renderAdmin(data);
+        st.textContent = '저장했습니다.';
+      } catch (e) {
+        st.textContent = e.message || '저장에 실패했습니다.';
+      }
+    };
+    d.querySelector('#aFeedbackList').addEventListener('click', async e => {
+      const btn = e.target.closest('[data-feedback-delete]');
+      if (!btn) return;
+      if (!confirm('이 의견을 삭제할까요?')) return;
+      try {
+        const data = await call({ action: 'deleteFeedback', adminCode, id: Number(btn.dataset.feedbackDelete) });
+        renderFeedback(data.feedback || []);
+      } catch (err) {
+        alert(err.message || '삭제에 실패했습니다.');
+      }
+    });
+    return d;
+  }
+
+  function renderFeedback(items) {
+    const box = adminDialog().querySelector('#aFeedbackList');
+    box.innerHTML = '';
+    if (!items.length) {
+      box.innerHTML = '<div class="wt-status">아직 등록된 의견이 없습니다.</div>';
+      return;
+    }
+    items.forEach(item => {
+      const el = document.createElement('div');
+      el.className = 'wt-feedback-item';
+      const date = item.created_at ? new Date(item.created_at).toLocaleString('ko-KR') : '';
+      el.innerHTML = '<div class="wt-feedback-meta"><span></span><button class="wt-feedback-delete" type="button" data-feedback-delete="'+item.id+'">삭제</button></div><div class="wt-feedback-message"></div>';
+      el.querySelector('.wt-feedback-meta span').textContent = date;
+      el.querySelector('.wt-feedback-message').textContent = item.message || '';
+      box.appendChild(el);
+    });
+  }
+
+  function renderAdmin(data) {
+    const d = adminDialog();
+    const stats = data.stats || {};
+    d.querySelector('#aToday').textContent = Number(stats.today || 0).toLocaleString('ko-KR');
+    d.querySelector('#aTotal').textContent = Number(stats.total || 0).toLocaleString('ko-KR');
+    d.querySelector('#aVisits').textContent = Number(stats.visits || 0).toLocaleString('ko-KR');
+    const n = data.notice || {};
+    d.querySelector('#aNoticeTitle').value = n.title || '';
+    d.querySelector('#aNoticeBody').value = n.body || '';
+    d.querySelector('#aNoticeActive').checked = !!n.is_active;
+    renderFeedback(data.feedback || []);
+  }
+
+  async function openAdmin() {
     const code = prompt('관리자 코드를 입력하세요.');
     if (!code) return;
     try {
       const data = await call({ action: 'admin', adminCode: code });
-      const d = dialog();
-      d.querySelector('#vToday').textContent = Number(data.stats?.today || 0).toLocaleString('ko-KR');
-      d.querySelector('#vTotal').textContent = Number(data.stats?.total || 0).toLocaleString('ko-KR');
-      d.querySelector('#vVisits').textContent = Number(data.stats?.visits || 0).toLocaleString('ko-KR');
-      d.showModal();
+      adminCode = code;
+      renderAdmin(data);
+      const d = adminDialog();
+      if (!d.open) d.showModal();
     } catch (e) {
       alert(e.message || '관리자 코드를 확인해주세요.');
     }
   }
 
-  const mark = document.querySelector('.brand-mark');
-  if (mark) mark.addEventListener('dblclick', e => {
-    e.preventDefault();
-    e.stopPropagation();
-    openStats();
-  });
+  const feedbackBtn = document.getElementById('feedbackOpenBtn');
+  if (feedbackBtn) feedbackBtn.onclick = () => {
+    const d = feedbackDialog();
+    d.querySelector('#feedbackStatus').textContent = '';
+    if (!d.open) d.showModal();
+    setTimeout(() => d.querySelector('#feedbackMessage')?.focus(), 30);
+  };
 
-  call({ action: 'visit', visitorId: id() }).catch(() => {});
+  const mark = document.querySelector('.brand-mark');
+  if (mark) {
+    mark.addEventListener('click', e => {
+      e.preventDefault();
+      e.stopPropagation();
+    });
+    mark.addEventListener('dblclick', e => {
+      e.preventDefault();
+      e.stopPropagation();
+      openAdmin();
+    });
+  }
+
+  call({ action: 'visit', visitorId: id() })
+    .then(data => {
+      const n = data.notice;
+      if (n && n.is_active && (n.title || n.body)) {
+        const d = noticeDialog(n);
+        if (!d.open) d.showModal();
+      }
+    })
+    .catch(() => {});
 })();
