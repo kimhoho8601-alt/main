@@ -78,6 +78,11 @@
       top:13px;left:13px;
     }
 
+    .top-actions{
+      display:flex;
+      align-items:center;
+      gap:8px;
+    }
     .top-label{
       font-size:12px;
       font-weight:700;
@@ -85,7 +90,26 @@
       letter-spacing:.14em;
       text-transform:uppercase;
       white-space:nowrap;
+      margin-right:6px;
     }
+    .order-button{
+      min-height:38px;
+      padding:0 13px;
+      border:1px solid var(--line);
+      border-radius:999px;
+      background:rgba(255,255,255,.86);
+      color:var(--ink);
+      font-family:inherit;
+      font-size:11px;
+      font-weight:800;
+      cursor:pointer;
+      white-space:nowrap;
+      transition:.2s ease;
+    }
+    .order-button:hover{background:#fff;border-color:#b9b9b4}
+    .order-button.active{background:var(--ink);border-color:var(--ink);color:#fff}
+    .order-button.reset{display:none;color:var(--red)}
+    body.order-editing .order-button.reset{display:inline-flex;align-items:center}
 
     main{
       flex:1;
@@ -154,6 +178,14 @@
       background:var(--red);
       box-shadow:0 0 0 6px rgba(229,35,41,.08);
     }
+    .order-note{
+      display:none;
+      margin-top:13px;
+      color:var(--red);
+      font-size:12px;
+      font-weight:700;
+    }
+    body.order-editing .order-note{display:block}
 
     .launcher{
       display:grid;
@@ -175,6 +207,63 @@
       flex-direction:column;
       transition:transform .35s cubic-bezier(.2,.8,.2,1), box-shadow .35s ease, border-color .35s ease;
       outline:none;
+    }
+    .reorder-handle{
+      position:absolute;
+      top:22px;
+      left:50%;
+      transform:translateX(-50%) translateY(-8px);
+      z-index:4;
+      height:32px;
+      padding:0 11px;
+      border:1px solid var(--line);
+      border-radius:999px;
+      background:#fff;
+      color:var(--muted);
+      display:flex;
+      align-items:center;
+      gap:6px;
+      font-size:10px;
+      font-weight:800;
+      opacity:0;
+      pointer-events:none;
+      transition:.2s ease;
+      box-shadow:0 8px 22px rgba(0,0,0,.08);
+      user-select:none;
+    }
+    .reorder-handle::before{content:"☷";font-size:15px;line-height:1}
+    body.order-editing .app-card{
+      cursor:grab;
+      user-select:none;
+      border-style:dashed;
+    }
+    body.order-editing .app-card:active{cursor:grabbing}
+    body.order-editing .app-card:hover{transform:translateY(-3px)}
+    body.order-editing .app-card .arrow{opacity:.2}
+    body.order-editing .reorder-handle{
+      opacity:1;
+      pointer-events:auto;
+      transform:translateX(-50%) translateY(0);
+    }
+    .app-card.dragging{
+      opacity:.5;
+      transform:scale(.985)!important;
+    }
+    .app-card.drag-over{
+      border-color:var(--red)!important;
+      box-shadow:0 0 0 3px rgba(229,35,41,.12),0 18px 44px rgba(0,0,0,.1)!important;
+    }
+    .mobile-order{
+      display:none;
+      position:absolute;
+      right:20px;
+      bottom:20px;
+      z-index:5;
+      gap:5px;
+    }
+    .mobile-order button{
+      width:34px;height:34px;border:1px solid var(--line);border-radius:50%;
+      background:#fff;color:var(--ink);font:800 14px inherit;cursor:pointer;
     }
 
     .app-card:hover,
@@ -443,6 +532,8 @@
     @media (max-width:680px){
       .shell{padding:20px 16px 28px}
       .top-label{display:none}
+      .top-actions{gap:6px}
+      .order-button{padding:0 10px;font-size:10px}
       main{padding-top:38px;gap:36px}
       h1{font-size:clamp(54px, 18vw, 78px);line-height:.91}
       h1 .accent{-webkit-text-stroke:1.4px var(--ink)}
@@ -450,6 +541,8 @@
       .utility-note{margin-top:24px}
       .launcher{grid-template-columns:1fr}
       .app-card{min-height:340px;padding:22px;border-radius:22px}
+      body.order-editing .mobile-order{display:flex}
+      body.order-editing .reorder-handle{left:24px;transform:none;top:18px}
       .visual{min-height:180px}
       .genogram-icon{transform:scale(.9)}
       .app-card:hover .genogram-icon{transform:scale(.95) rotate(-2deg)}
@@ -480,7 +573,11 @@
         <span class="brand-mark" aria-hidden="true"></span>
         <span>WORK TOOLS</span>
       </a>
-      <div class="top-label">Personal utility launcher</div>
+      <div class="top-actions">
+        <div class="top-label">Personal utility launcher</div>
+        <button class="order-button" id="orderEditBtn" type="button">순서 편집</button>
+        <button class="order-button reset" id="orderResetBtn" type="button">기본 순서로</button>
+      </div>
     </header>
 
     <main>
@@ -499,16 +596,22 @@
           <span class="pulse" aria-hidden="true"></span>
           <span>도구를 선택하면 새 탭에서 열립니다.</span>
         </div>
+        <div class="order-note">카드를 드래그해 원하는 순서로 배치하세요. 이 브라우저에 자동 저장됩니다.</div>
       </section>
 
       <section class="launcher" aria-label="웹앱 바로가기">
         <a
-          class="app-card"
+          class="app-card" data-tool="family-tree"
           href="https://kimhoho8601-alt.github.io/family-tree/"
           target="_blank"
           rel="noopener noreferrer"
           aria-label="가계도와 생태도 도구 열기"
         >
+          <span class="reorder-handle" aria-hidden="true">순서 이동</span>
+          <span class="mobile-order" aria-label="가계도 · 생태도 순서 변경">
+            <button type="button" class="move-up" aria-label="앞으로 이동">↑</button>
+            <button type="button" class="move-down" aria-label="뒤로 이동">↓</button>
+          </span>
           <div class="card-top">
             <span class="tag">Family mapping</span>
             <span class="arrow" aria-hidden="true">↗</span>
@@ -529,12 +632,17 @@
         </a>
 
         <a
-          class="app-card"
+          class="app-card" data-tool="sign"
           href="https://kimhoho8601-alt.github.io/sign/"
           target="_blank"
           rel="noopener noreferrer"
           aria-label="서명과 도장 만들기 도구 열기"
         >
+          <span class="reorder-handle" aria-hidden="true">순서 이동</span>
+          <span class="mobile-order" aria-label="서명 · 도장 만들기 순서 변경">
+            <button type="button" class="move-up" aria-label="앞으로 이동">↑</button>
+            <button type="button" class="move-down" aria-label="뒤로 이동">↓</button>
+          </span>
           <div class="card-top">
             <span class="tag">Signature maker</span>
             <span class="arrow" aria-hidden="true">↗</span>
@@ -547,12 +655,17 @@
         </a>
 
         <a
-          class="app-card"
+          class="app-card" data-tool="convert"
           href="https://kimhoho8601-alt.github.io/Convert/"
           target="_blank"
           rel="noopener noreferrer"
           aria-label="문서 변환기 열기"
         >
+          <span class="reorder-handle" aria-hidden="true">순서 이동</span>
+          <span class="mobile-order" aria-label="문서 변환기 순서 변경">
+            <button type="button" class="move-up" aria-label="앞으로 이동">↑</button>
+            <button type="button" class="move-down" aria-label="뒤로 이동">↓</button>
+          </span>
           <div class="card-top">
             <span class="tag">Document converter</span>
             <span class="arrow" aria-hidden="true">↗</span>
@@ -570,12 +683,17 @@
           <p class="card-copy">PDF를 이미지로 바꾸고, 이미지를 PDF·JPG·PNG·WebP로 변환하거나 PDF를 합치고 나눕니다.</p>
         </a>
         <a
-          class="app-card"
+          class="app-card" data-tool="photo"
           href="https://kimhoho8601-alt.github.io/photo/"
           target="_blank"
           rel="noopener noreferrer"
           aria-label="사진 정리 도구 열기"
         >
+          <span class="reorder-handle" aria-hidden="true">순서 이동</span>
+          <span class="mobile-order" aria-label="사진 정리 순서 변경">
+            <button type="button" class="move-up" aria-label="앞으로 이동">↑</button>
+            <button type="button" class="move-down" aria-label="뒤로 이동">↓</button>
+          </span>
           <div class="card-top">
             <span class="tag">Photo organizer</span>
             <span class="arrow" aria-hidden="true">↗</span>
@@ -601,5 +719,110 @@
       <span>각 서비스는 독립된 프로젝트로 연결됩니다.</span>
     </footer>
   </div>
+
+  <script>
+  (() => {
+    const STORAGE_KEY = 'work-tools-order-v1';
+    const launcher = document.querySelector('.launcher');
+    const editBtn = document.getElementById('orderEditBtn');
+    const resetBtn = document.getElementById('orderResetBtn');
+    const defaultOrder = [...launcher.querySelectorAll('.app-card')].map(card => card.dataset.tool);
+    let editing = false;
+    let dragged = null;
+
+    function cards(){ return [...launcher.querySelectorAll('.app-card')]; }
+
+    function saveOrder(){
+      try{
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(cards().map(card => card.dataset.tool)));
+      }catch(e){}
+    }
+
+    function restoreOrder(){
+      let saved = null;
+      try{ saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || 'null'); }catch(e){}
+      if(!Array.isArray(saved)) return;
+      const map = new Map(cards().map(card => [card.dataset.tool, card]));
+      saved.forEach(key => { const card = map.get(key); if(card) launcher.appendChild(card); });
+      defaultOrder.forEach(key => { const card = map.get(key); if(card && !saved.includes(key)) launcher.appendChild(card); });
+    }
+
+    function setEditing(next){
+      editing = next;
+      document.body.classList.toggle('order-editing', editing);
+      editBtn.classList.toggle('active', editing);
+      editBtn.textContent = editing ? '편집 완료' : '순서 편집';
+      cards().forEach(card => card.draggable = editing);
+    }
+
+    launcher.addEventListener('click', e => {
+      if(!editing) return;
+      e.preventDefault();
+      e.stopPropagation();
+    }, true);
+
+    launcher.addEventListener('dragstart', e => {
+      const card = e.target.closest('.app-card');
+      if(!editing || !card) return;
+      dragged = card;
+      card.classList.add('dragging');
+      if(e.dataTransfer){
+        e.dataTransfer.effectAllowed = 'move';
+        e.dataTransfer.setData('text/plain', card.dataset.tool);
+      }
+    });
+
+    launcher.addEventListener('dragover', e => {
+      if(!editing || !dragged) return;
+      const target = e.target.closest('.app-card');
+      if(!target || target === dragged) return;
+      e.preventDefault();
+      cards().forEach(card => card.classList.remove('drag-over'));
+      target.classList.add('drag-over');
+      const rect = target.getBoundingClientRect();
+      const before = e.clientY < rect.top + rect.height / 2;
+      launcher.insertBefore(dragged, before ? target : target.nextSibling);
+    });
+
+    launcher.addEventListener('drop', e => {
+      if(!editing || !dragged) return;
+      e.preventDefault();
+      saveOrder();
+    });
+
+    launcher.addEventListener('dragend', () => {
+      cards().forEach(card => card.classList.remove('dragging','drag-over'));
+      dragged = null;
+      saveOrder();
+    });
+
+    launcher.addEventListener('click', e => {
+      if(!editing) return;
+      const button = e.target.closest('.mobile-order button');
+      if(!button) return;
+      e.preventDefault();
+      e.stopPropagation();
+      const card = button.closest('.app-card');
+      if(button.classList.contains('move-up')){
+        const prev = card.previousElementSibling;
+        if(prev) launcher.insertBefore(card, prev);
+      }else{
+        const next = card.nextElementSibling;
+        if(next) launcher.insertBefore(next, card);
+      }
+      saveOrder();
+    });
+
+    editBtn.addEventListener('click', () => setEditing(!editing));
+    resetBtn.addEventListener('click', () => {
+      const map = new Map(cards().map(card => [card.dataset.tool, card]));
+      defaultOrder.forEach(key => { const card = map.get(key); if(card) launcher.appendChild(card); });
+      try{ localStorage.removeItem(STORAGE_KEY); }catch(e){}
+    });
+
+    restoreOrder();
+  })();
+  </script>
+
 </body>
 </html>
