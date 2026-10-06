@@ -717,8 +717,47 @@
     .wt-feedback-meta span{font-size:10px;color:var(--muted)}
     .wt-feedback-delete{border:0;background:transparent;color:var(--red);font-size:10px;font-weight:800;cursor:pointer}
     .wt-feedback-message{font-size:12px;line-height:1.6;white-space:pre-wrap;word-break:keep-all}
-    .wt-notice-body{font-size:14px;line-height:1.7;color:#4a4445;white-space:pre-wrap;word-break:keep-all;margin-top:14px}
-    .wt-notice-title{margin:6px 0 0;font-size:24px;letter-spacing:-.035em}
+    .wt-notice-body{font-size:14px;line-height:1.75;color:#4a4445;white-space:pre-wrap;word-break:keep-all;margin-top:16px}
+    .wt-notice-title{margin:7px 0 0;font:800 28px "Archivo Black","Noto Sans KR",sans-serif;letter-spacing:-.045em;word-break:keep-all;text-wrap:balance}
+    #noticeDialog{width:min(620px,calc(100vw - 28px));border-radius:24px;overflow:hidden}
+    #noticeDialog .wt-dialog-inner{padding:0}
+    .notice-hero{
+      position:relative;
+      padding:28px 30px 24px;
+      background:
+        linear-gradient(rgba(17,17,17,.035) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(17,17,17,.035) 1px, transparent 1px),
+        #f7f7f5;
+      background-size:24px 24px;
+      border-bottom:1px solid var(--line);
+    }
+    .notice-hero::before{
+      content:"";
+      position:absolute;left:0;top:0;bottom:0;width:6px;background:var(--red)
+    }
+    .notice-kicker{
+      display:inline-flex;align-items:center;gap:8px;
+      color:var(--red);font:800 11px "Archivo Black",sans-serif;letter-spacing:.14em
+    }
+    .notice-kicker::before{content:"";width:22px;height:2px;background:var(--red)}
+    .notice-content{padding:24px 30px 26px}
+    .notice-actions{
+      margin-top:22px;
+      padding-top:16px;
+      border-top:1px solid var(--line);
+      display:flex;align-items:center;justify-content:space-between;gap:14px
+    }
+    .notice-hide{
+      display:flex;align-items:center;gap:8px;
+      color:var(--muted);font-size:12px;font-weight:700;cursor:pointer;user-select:none
+    }
+    .notice-hide input{width:16px;height:16px;accent-color:var(--red)}
+    .notice-confirm{
+      border:0;border-radius:999px;background:var(--ink);color:#fff;
+      min-height:42px;padding:0 18px;font:800 12px "Noto Sans KR",sans-serif;cursor:pointer
+    }
+    .notice-confirm:hover{background:var(--red)}
+
     .wt-preview{
       margin-top:16px;
       border:1px solid #eadf9e;
@@ -1029,6 +1068,6 @@
   })();
   </script>
 
-  <script src="visitor-stats.js?v=20261006-3"></script>
+  <script src="visitor-stats.js?v=20261006-4"></script>
 </body>
 </html>
