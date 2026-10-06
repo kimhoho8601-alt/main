@@ -371,6 +371,14 @@
     }
     .app-card:hover .convert-icon{transform:scale(1.05) rotate(1deg)}
 
+    .photo-icon{width:180px;height:180px;position:relative;display:grid;place-items:center;transition:transform .35s cubic-bezier(.2,.8,.2,1)}
+    .photo-card,.photo-main{position:absolute;width:116px;height:86px;border-radius:12px;background:#fff;border:5px solid var(--ink)}
+    .photo-back{transform:translate(-18px,-16px) rotate(-7deg);opacity:.22}
+    .photo-front{transform:translate(18px,14px) rotate(7deg);border-color:var(--red);opacity:.22}
+    .photo-main{display:block;overflow:hidden;box-shadow:0 12px 24px rgba(0,0,0,.06)}
+    .photo-sun{position:absolute;width:22px;height:22px;border:4px solid var(--red);border-radius:50%;right:16px;top:14px}
+    .photo-mountain{position:absolute;left:14px;right:14px;bottom:13px;height:38px;border-left:4px solid var(--ink);border-bottom:4px solid var(--ink);transform:skewX(-32deg) rotate(-4deg)}
+    .app-card:hover .photo-icon{transform:scale(1.05) rotate(-1deg)}
     .card-title{
       font-size:28px;
       font-weight:800;
@@ -413,6 +421,7 @@
     .app-card:nth-child(1){animation-delay:.08s}
     .app-card:nth-child(2){animation-delay:.16s}
     .app-card:nth-child(3){animation-delay:.24s}
+    .app-card:nth-child(4){animation-delay:.32s}
 
     @keyframes rise{
       from{opacity:0;transform:translateY(24px)}
@@ -559,6 +568,30 @@
           </div>
           <h2 class="card-title">문서 변환기</h2>
           <p class="card-copy">PDF를 PNG·HWPX로 변환하고, 다양한 문서를 PDF 형식으로 바꿉니다.</p>
+        </a>
+        <a
+          class="app-card"
+          href="https://kimhoho8601-alt.github.io/photo/"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="사진 정리 도구 열기"
+        >
+          <div class="card-top">
+            <span class="tag">Photo organizer</span>
+            <span class="arrow" aria-hidden="true">↗</span>
+          </div>
+          <div class="visual" aria-hidden="true">
+            <div class="photo-icon">
+              <span class="photo-card photo-back"></span>
+              <span class="photo-card photo-front"></span>
+              <div class="photo-main">
+                <span class="photo-sun"></span>
+                <span class="photo-mountain"></span>
+              </div>
+            </div>
+          </div>
+          <h2 class="card-title">사진 정리</h2>
+          <p class="card-copy">아이폰·갤럭시 사진을 기기 구분 없이 크기·품질·파일명에 맞춰 일괄 정리합니다.</p>
         </a>
       </section>
     </main>
