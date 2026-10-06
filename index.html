@@ -296,6 +296,81 @@
     }
     .app-card:hover .seal-icon{transform:rotate(-2deg) scale(1.05)}
 
+    .convert-icon{
+      width:180px;
+      height:180px;
+      position:relative;
+      display:grid;
+      place-items:center;
+      transition:transform .35s cubic-bezier(.2,.8,.2,1);
+    }
+    .convert-icon::before,
+    .convert-icon::after{
+      content:"";
+      position:absolute;
+      width:106px;
+      height:132px;
+      border:5px solid var(--ink);
+      border-radius:14px;
+      background:var(--white);
+    }
+    .convert-icon::before{
+      transform:translate(-18px,-10px) rotate(-6deg);
+      opacity:.24;
+    }
+    .convert-icon::after{
+      transform:translate(18px,10px) rotate(6deg);
+      border-color:var(--red);
+      opacity:.24;
+    }
+    .convert-core{
+      position:relative;
+      z-index:2;
+      width:112px;
+      height:138px;
+      border:5px solid var(--ink);
+      border-radius:14px;
+      background:var(--white);
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      gap:13px;
+      box-shadow:0 12px 24px rgba(0,0,0,.06);
+    }
+    .convert-core strong{
+      font-family:"Archivo Black",sans-serif;
+      font-size:22px;
+      letter-spacing:-.04em;
+    }
+    .convert-arrow{
+      width:52px;
+      height:28px;
+      position:relative;
+    }
+    .convert-arrow::before{
+      content:"";
+      position:absolute;
+      left:2px;
+      right:9px;
+      top:12px;
+      height:4px;
+      border-radius:3px;
+      background:var(--red);
+    }
+    .convert-arrow::after{
+      content:"";
+      position:absolute;
+      right:1px;
+      top:5px;
+      width:14px;
+      height:14px;
+      border-top:4px solid var(--red);
+      border-right:4px solid var(--red);
+      transform:rotate(45deg);
+    }
+    .app-card:hover .convert-icon{transform:scale(1.05) rotate(1deg)}
+
     .card-title{
       font-size:28px;
       font-weight:800;
@@ -337,6 +412,7 @@
     }
     .app-card:nth-child(1){animation-delay:.08s}
     .app-card:nth-child(2){animation-delay:.16s}
+    .app-card:nth-child(3){animation-delay:.24s}
 
     @keyframes rise{
       from{opacity:0;transform:translateY(24px)}
@@ -370,6 +446,8 @@
       .app-card:hover .genogram-icon{transform:scale(.95) rotate(-2deg)}
       .seal-icon{transform:rotate(-8deg) scale(.86)}
       .app-card:hover .seal-icon{transform:rotate(-2deg) scale(.91)}
+      .convert-icon{transform:scale(.88)}
+      .app-card:hover .convert-icon{transform:scale(.93) rotate(1deg)}
       .card-title{font-size:24px}
       footer{align-items:flex-start;flex-direction:column;gap:6px}
     }
@@ -457,6 +535,30 @@
           </div>
           <h2 class="card-title">서명 · 도장 만들기</h2>
           <p class="card-copy">사인과 인장을 간편하게 만들고 필요한 이미지 형태로 활용합니다.</p>
+        </a>
+
+        <a
+          class="app-card"
+          href="https://kimhoho8601-alt.github.io/Convert/"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="문서 변환기 열기"
+        >
+          <div class="card-top">
+            <span class="tag">Document converter</span>
+            <span class="arrow" aria-hidden="true">↗</span>
+          </div>
+          <div class="visual" aria-hidden="true">
+            <div class="convert-icon">
+              <div class="convert-core">
+                <strong>FILE</strong>
+                <span class="convert-arrow"></span>
+                <strong>PDF</strong>
+              </div>
+            </div>
+          </div>
+          <h2 class="card-title">문서 변환기</h2>
+          <p class="card-copy">PDF를 PNG·HWPX로 변환하고, 다양한 문서를 PDF 형식으로 바꿉니다.</p>
         </a>
       </section>
     </main>
