@@ -649,23 +649,29 @@
 
 
     .feedback-link{
-      margin-top:12px;
+      margin-top:14px;
       display:inline-flex;
       align-items:center;
-      gap:8px;
-      border:0;
-      background:transparent;
-      color:var(--muted);
+      gap:9px;
+      border:1px solid #eadf9e;
+      background:#fff7cf;
+      color:#5f5528;
       font-family:inherit;
       font-size:12px;
-      font-weight:700;
-      padding:0;
+      font-weight:800;
+      padding:11px 14px;
+      border-radius:12px;
       cursor:pointer;
-      text-decoration:underline;
-      text-underline-offset:4px;
+      box-shadow:0 8px 20px rgba(132,107,0,.07);
+      transition:.2s ease;
     }
-    .feedback-link:hover{color:var(--red)}
-    .feedback-link::before{content:"↗";color:var(--red);font-size:13px}
+    .feedback-link:hover{
+      background:#fff1ad;
+      border-color:#dbc96c;
+      color:#3f381d;
+      transform:translateY(-1px);
+    }
+    .feedback-link::before{content:"✎";color:#b69200;font-size:14px}
 
     .wt-dialog{
       border:0;
@@ -713,6 +719,39 @@
     .wt-feedback-message{font-size:12px;line-height:1.6;white-space:pre-wrap;word-break:keep-all}
     .wt-notice-body{font-size:14px;line-height:1.7;color:#4a4445;white-space:pre-wrap;word-break:keep-all;margin-top:14px}
     .wt-notice-title{margin:6px 0 0;font-size:24px;letter-spacing:-.035em}
+    .wt-preview{
+      margin-top:16px;
+      border:1px solid #eadf9e;
+      border-radius:14px;
+      background:#fffdf1;
+      overflow:hidden;
+    }
+    .wt-preview-label{
+      padding:8px 11px;
+      border-bottom:1px solid #eee4b4;
+      color:#8a7411;
+      font-size:10px;
+      font-weight:800;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+    }
+    .wt-preview-body{padding:16px}
+    .wt-preview-body strong{
+      display:block;
+      font-size:17px;
+      letter-spacing:-.03em;
+      color:var(--ink);
+      word-break:keep-all;
+    }
+    .wt-preview-body p{
+      margin:8px 0 0;
+      font-size:12px;
+      line-height:1.65;
+      color:#615b43;
+      white-space:pre-wrap;
+      word-break:keep-all;
+    }
+    .wt-preview-empty{color:#9b9270!important;font-weight:500!important}
     @media(max-width:700px){
       .wt-admin-grid{grid-template-columns:1fr}
       .wt-stats{grid-template-columns:1fr}
@@ -990,6 +1029,6 @@
   })();
   </script>
 
-  <script src="visitor-stats.js?v=20261006-2"></script>
+  <script src="visitor-stats.js?v=20261006-3"></script>
 </body>
 </html>
