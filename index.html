@@ -647,6 +647,78 @@
       footer{align-items:flex-start;flex-direction:column;gap:6px}
     }
 
+
+    .feedback-link{
+      margin-top:12px;
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      border:0;
+      background:transparent;
+      color:var(--muted);
+      font-family:inherit;
+      font-size:12px;
+      font-weight:700;
+      padding:0;
+      cursor:pointer;
+      text-decoration:underline;
+      text-underline-offset:4px;
+    }
+    .feedback-link:hover{color:var(--red)}
+    .feedback-link::before{content:"↗";color:var(--red);font-size:13px}
+
+    .wt-dialog{
+      border:0;
+      padding:0;
+      border-radius:20px;
+      width:min(720px,calc(100vw - 28px));
+      max-height:min(86vh,900px);
+      overflow:auto;
+      background:#fff;
+      color:var(--ink);
+      box-shadow:0 30px 90px rgba(20,10,12,.28);
+    }
+    .wt-dialog::backdrop{background:rgba(20,14,16,.52);backdrop-filter:blur(2px)}
+    .wt-dialog-inner{padding:28px;font-family:"Noto Sans KR",sans-serif}
+    .wt-dialog-head{display:flex;align-items:flex-start;justify-content:space-between;gap:18px}
+    .wt-dialog-head h2{margin:5px 0 0;font-size:26px;letter-spacing:-.04em}
+    .wt-kicker{color:var(--red);font:800 11px "Archivo Black",sans-serif;letter-spacing:.14em}
+    .wt-close{width:36px;height:36px;border:0;border-radius:10px;background:#f1efef;font-size:24px;cursor:pointer}
+    .wt-field{display:block;margin-top:15px}
+    .wt-field span{display:block;margin-bottom:7px;font-size:11px;font-weight:800}
+    .wt-input,.wt-textarea{
+      width:100%;box-sizing:border-box;border:1px solid var(--line);border-radius:12px;
+      padding:12px 13px;font:inherit;background:#fff;color:var(--ink);outline:none
+    }
+    .wt-input{height:44px}.wt-textarea{min-height:120px;resize:vertical;line-height:1.6}
+    .wt-input:focus,.wt-textarea:focus{border-color:var(--red);box-shadow:0 0 0 3px rgba(229,35,41,.08)}
+    .wt-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:16px}
+    .wt-btn{border:0;border-radius:11px;padding:10px 15px;font:800 12px "Noto Sans KR",sans-serif;cursor:pointer}
+    .wt-btn.primary{background:var(--red);color:#fff}.wt-btn.ghost{background:#f0f0ed;color:#555}
+    .wt-status{min-height:18px;margin-top:10px;color:var(--muted);font-size:11px}
+    .wt-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:22px}
+    .wt-stat{padding:18px;border:1px solid var(--line);border-radius:15px;background:#fff}
+    .wt-stat span{display:block;color:var(--muted);font-size:11px;font-weight:700;margin-bottom:7px}
+    .wt-stat strong{display:block;color:var(--red);font:800 32px "Archivo Black","Noto Sans KR",sans-serif}
+    .wt-admin-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:18px}
+    .wt-admin-panel{border:1px solid var(--line);border-radius:16px;padding:18px;background:#fff}
+    .wt-admin-panel h3{margin:0 0 4px;font-size:16px}
+    .wt-admin-panel p{margin:0;color:var(--muted);font-size:11px;line-height:1.6}
+    .wt-check{display:flex;align-items:center;gap:8px;margin-top:14px;font-size:12px;font-weight:700}
+    .wt-feedback-list{display:grid;gap:9px;margin-top:13px;max-height:330px;overflow:auto}
+    .wt-feedback-item{border:1px solid var(--line);border-radius:12px;padding:12px;background:#faf9f8}
+    .wt-feedback-meta{display:flex;justify-content:space-between;gap:10px;align-items:center;margin-bottom:6px}
+    .wt-feedback-meta span{font-size:10px;color:var(--muted)}
+    .wt-feedback-delete{border:0;background:transparent;color:var(--red);font-size:10px;font-weight:800;cursor:pointer}
+    .wt-feedback-message{font-size:12px;line-height:1.6;white-space:pre-wrap;word-break:keep-all}
+    .wt-notice-body{font-size:14px;line-height:1.7;color:#4a4445;white-space:pre-wrap;word-break:keep-all;margin-top:14px}
+    .wt-notice-title{margin:6px 0 0;font-size:24px;letter-spacing:-.035em}
+    @media(max-width:700px){
+      .wt-admin-grid{grid-template-columns:1fr}
+      .wt-stats{grid-template-columns:1fr}
+      .wt-dialog-inner{padding:22px}
+    }
+
     @media (prefers-reduced-motion:reduce){
       *,*::before,*::after{
         animation-duration:.01ms!important;
@@ -689,6 +761,7 @@
           <span class="pulse" aria-hidden="true"></span>
           <span>도구를 선택하면 새 탭에서 열립니다.</span>
         </div>
+        <button class="feedback-link" id="feedbackOpenBtn" type="button">관리자에게 의견 보내기</button>
         <div class="order-note">카드를 드래그해 원하는 순서로 배치하세요. 이 브라우저에 자동 저장됩니다.</div>
       </section>
 
@@ -917,6 +990,6 @@
   })();
   </script>
 
-  <script src="visitor-stats.js?v=20261006-1"></script>
+  <script src="visitor-stats.js?v=20261006-2"></script>
 </body>
 </html>
