@@ -2,6 +2,7 @@
   const api = 'https://tedbkobhltarqibjhfhk.supabase.co/functions/v1/main-visitor-api';
   const key = 'work-tools-main-visitor-v1';
   let adminCode = '';
+  const noticeDismissKey = 'work-tools-notice-dismissed-v1';
 
   function id() {
     let v = '';
@@ -61,10 +62,21 @@
 
   function noticeDialog(notice) {
     const d = makeDialog('noticeDialog',
-      '<div class="wt-dialog-inner"><div class="wt-dialog-head"><div><div class="wt-kicker">NOTICE</div><h2 class="wt-notice-title" id="noticeTitle"></h2></div><button class="wt-close" data-close aria-label="닫기">×</button></div><div class="wt-notice-body" id="noticeBody"></div></div>'
+      '<div class="wt-dialog-inner"><section class="notice-hero"><div class="notice-kicker">WORK TOOLS NOTICE</div><h2 class="wt-notice-title" id="noticeTitle"></h2></section><section class="notice-content"><div class="wt-notice-body" id="noticeBody"></div><div class="notice-actions"><label class="notice-hide"><input type="checkbox" id="noticeDontShow"> 다시 열지 않기</label><button class="notice-confirm" id="noticeConfirm" type="button">확인</button></div></section></div>'
     );
     d.querySelector('#noticeTitle').textContent = notice?.title || '공지';
     d.querySelector('#noticeBody').textContent = notice?.body || '';
+    const closeNotice = () => {
+      if (d.querySelector('#noticeDontShow')?.checked) {
+        try { localStorage.setItem(noticeDismissKey, String(notice?.updated_at || notice?.title || 'notice')); } catch {}
+      }
+      d.close();
+    };
+    d.querySelector('#noticeConfirm').onclick = closeNotice;
+    d.addEventListener('cancel', e => {
+      e.preventDefault();
+      closeNotice();
+    }, { once:true });
     return d;
   }
 
@@ -189,8 +201,13 @@
     .then(data => {
       const n = data.notice;
       if (n && n.is_active && (n.title || n.body)) {
-        const d = noticeDialog(n);
-        if (!d.open) d.showModal();
+        const noticeVersion = String(n.updated_at || n.title || 'notice');
+        let dismissed = '';
+        try { dismissed = localStorage.getItem(noticeDismissKey) || ''; } catch {}
+        if (dismissed !== noticeVersion) {
+          const d = noticeDialog(n);
+          if (!d.open) d.showModal();
+        }
       }
     })
     .catch(() => {});
