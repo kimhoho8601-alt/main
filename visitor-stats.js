@@ -5,6 +5,7 @@
   const noticeDismissKey = 'work-tools-notice-dismissed-v1';
 
   function id() {
+    if (window.WorkToolsAnalytics) return window.WorkToolsAnalytics.visitorId;
     let v = '';
     try { v = localStorage.getItem(key) || ''; } catch {}
     if (!v) {
@@ -82,8 +83,9 @@
 
   function adminDialog() {
     const d = makeDialog('adminDialog',
-      '<div class="wt-dialog-inner"><div class="wt-dialog-head"><div><div class="wt-kicker">ADMIN</div><h2>WORK TOOLS 관리</h2></div><button class="wt-close" data-close aria-label="닫기">×</button></div><div class="wt-stats"><div class="wt-stat"><span>오늘 방문자</span><strong id="aToday">0</strong></div><div class="wt-stat"><span>누적 방문자</span><strong id="aTotal">0</strong></div><div class="wt-stat"><span>누적 방문 횟수</span><strong id="aVisits">0</strong></div></div><div class="wt-admin-grid"><section class="wt-admin-panel"><h3>팝업 공지</h3><p>메인 페이지 접속 시 표시할 공지를 설정합니다.</p><label class="wt-field"><span>제목</span><input class="wt-input" id="aNoticeTitle" maxlength="80"></label><label class="wt-field"><span>내용</span><textarea class="wt-textarea" id="aNoticeBody" maxlength="2000"></textarea></label><label class="wt-check"><input type="checkbox" id="aNoticeActive"> 공지 활성화</label><div class="wt-preview"><div class="wt-preview-label">공지 미리보기</div><div class="wt-preview-body"><strong id="aPreviewTitle" class="wt-preview-empty">제목을 입력하면 여기에 표시됩니다.</strong><p id="aPreviewBody">내용을 입력하면 실제 팝업과 비슷하게 미리 볼 수 있습니다.</p></div></div><div id="aNoticeStatus" class="wt-status"></div><div class="wt-actions"><button class="wt-btn primary" id="aNoticeSave" type="button">공지 저장</button></div></section><section class="wt-admin-panel"><h3>받은 의견</h3><p>최근 의견 100건까지 표시됩니다.</p><div class="wt-feedback-list" id="aFeedbackList"></div></section></div></div>'
+      '<div class="wt-dialog-inner"><div class="wt-dialog-head"><div><div class="wt-kicker">ADMIN</div><h2>WORK TOOLS 관리</h2></div><button class="wt-close" data-close aria-label="닫기">×</button></div><div class="wt-stats"><div class="wt-stat"><span>오늘 방문자</span><strong id="aToday">0</strong></div><div class="wt-stat"><span>누적 방문자</span><strong id="aTotal">0</strong></div><div class="wt-stat"><span>누적 일별 방문자 합계</span><strong id="aVisits">0</strong></div></div><div class="wt-admin-grid"><section class="wt-admin-panel"><h3>팝업 공지</h3><p>메인 페이지 접속 시 표시할 공지를 설정합니다.</p><label class="wt-field"><span>제목</span><input class="wt-input" id="aNoticeTitle" maxlength="80"></label><label class="wt-field"><span>내용</span><textarea class="wt-textarea" id="aNoticeBody" maxlength="2000"></textarea></label><label class="wt-check"><input type="checkbox" id="aNoticeActive"> 공지 활성화</label><div class="wt-preview"><div class="wt-preview-label">공지 미리보기</div><div class="wt-preview-body"><strong id="aPreviewTitle" class="wt-preview-empty">제목을 입력하면 여기에 표시됩니다.</strong><p id="aPreviewBody">내용을 입력하면 실제 팝업과 비슷하게 미리 볼 수 있습니다.</p></div></div><div id="aNoticeStatus" class="wt-status"></div><div class="wt-actions"><button class="wt-btn primary" id="aNoticeSave" type="button">공지 저장</button></div></section><section class="wt-admin-panel"><h3>받은 의견</h3><p>최근 의견 100건까지 표시됩니다.</p><div class="wt-feedback-list" id="aFeedbackList"></div></section></div></div>'
     );
+    window.mountToolAnalytics?.(d, call, () => adminCode);
     const syncNoticePreview = () => {
       const title = d.querySelector('#aNoticeTitle').value.trim();
       const body = d.querySelector('#aNoticeBody').value.trim();
@@ -171,6 +173,7 @@
       renderAdmin(data);
       const d = adminDialog();
       if (!d.open) d.showModal();
+      d.refreshToolAnalytics?.();
     } catch (e) {
       alert(e.message || '관리자 코드를 확인해주세요.');
     }
